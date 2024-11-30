@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface JobDataRepository extends JpaRepository<JobData, Long> {
+public interface JobDataRepository extends JpaRepository<JobData, Long>, JobDataRepositoryCustom {
     List<JobData> findBySalaryGreaterThanEqualAndJobTitleContainingIgnoreCaseAndGender(Long salaryGreaterThanOrEqual, String jobTitle, String gender);
 
     List<JobData> findBySalaryGreaterThanEqualAndJobTitleContainingIgnoreCase(Long salaryGreaterThanOrEqual, String jobTitle);
