@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-insert-data
+      author: kittikawin
+      changes:
+        - loadData:
+            file: classpath:db/data/salary_data.csv
+            tableName: salary

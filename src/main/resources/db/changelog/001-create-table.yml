@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-salary-table
+      author: kittikawin
+      changes:
+        - createTable:
+            tableName: salary
+            columns:
+              - column:
+                  name: "ID"
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "Timestamp"
+                  type: VARCHAR(255)
+              - column:
+                  name: "Employer"
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Location"
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Job Title"
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Years at Employer"
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Years of Experience"
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Salary"
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Signing Bonus"
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Annual Bonus"
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Annual Stock Value/Bonus"
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Gender"
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "Additional Comments"
+                  type: TEXT
+                  constraints:
+                    nullable: true
