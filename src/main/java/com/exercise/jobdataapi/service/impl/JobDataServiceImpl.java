@@ -86,6 +86,7 @@ public class JobDataServiceImpl implements JobDataService {
     @Override
     public ResponseDTO getFilteredJobDataBySparseFields(String fields) {
         try {
+            validateFields(fields);
             List<String> jsonProperty = convertSnakeToCamelCase(fields);
 
             String columnName = Arrays.stream(fields.split(","))
@@ -106,10 +107,6 @@ public class JobDataServiceImpl implements JobDataService {
                 filteredData.add(rowMap);
             }
 
-            for (Map<String, Object> rowMap : filteredData) {
-                System.out.println("Row Map: " + rowMap);  // Debugging log
-            }
-
             List<JobDataDTO> dataDTOS = filteredData.stream()
                     .map(row -> {
                         try {
@@ -125,7 +122,11 @@ public class JobDataServiceImpl implements JobDataService {
                     .data(dataDTOS)
                     .build();
 
-        } catch (Exception e) {
+        }
+        catch (IllegalArgumentException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new RuntimeException("Error fetching filtered job data", e);
         }
     }
@@ -157,6 +158,22 @@ public class JobDataServiceImpl implements JobDataService {
         }
 
         return camelCaseString.toString();
+    }
+
+    private static void validateFields(String fields) {
+        Set<String> allowedFields = new HashSet<>(Arrays.asList(
+                "employer", "location", "job_title", "years_at_employer",
+                "years_of_experience", "salary", "signing_bonus", "annual_bonus",
+                "annual_stock_value_bonus", "gender", "additional_comments"
+        ));
+
+        String[] inputFields = fields.split(",");
+
+        for (String field : inputFields) {
+            if (!allowedFields.contains(field)) {
+                throw new IllegalArgumentException("Invalid field: " + field);
+            }
+        }
     }
 
 }
