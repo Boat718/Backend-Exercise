@@ -53,4 +53,18 @@ This ensures that only relevant records and fields are fetched dynamically based
 - Filter by one or more fields/attributes (e.g. /job_data?salary[gte]=120000) (Show only filtered row. Expected filter able column: job title, salary, gender )
 - Filter by a sparse fields/attributes (e.g. /job_data?fields=job_title,gender,salary) (Show only filtered column)
 - Sort by one or more fields/attributes (e.g. /job_data?sort=job_title&sort_type=DESC)
+  
+| column in CSV | fields for Params |
+| ------ | ------ |
+| Employer | employer |
+| Location | location |
+| Job Title | job_title |
+| Years at Employer | years_at_employer |
+| Years of Experience| years_of_experience |
+| Salary | salary |
+| Signing Bonus | signing_bonus |
+| Annual Bonus | annual_bonus |
+| Annual Stock Value/Bonus | annual_stock_value_bonus |
+| Gender | gender |
+| Additional Comments | additional_comments |
 
