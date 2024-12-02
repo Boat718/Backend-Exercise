@@ -32,8 +32,8 @@ This ensures that only relevant records and fields are fetched dynamically based
 
 1. Clone this repository:
     ```bash
-    https://github.com/Boat718/Frontend-Assignment.git
-    cd frontend-assignment
+    https://github.com/Boat718/Backend-Exercise.git
+    cd Backend-Exercise
     ```
 
 2. Build the project:
