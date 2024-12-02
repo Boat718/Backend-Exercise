@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,19 +79,33 @@ public class JobDataServiceImpl implements JobDataService {
             List<String> jsonProperty = convertSnakeToCamelCase(fields);
 
             String columnName = Arrays.stream(fields.split(","))
-                    .map(field -> "\"" + field.replace("_", " ").toUpperCase() + "\"")
+                    .map(field -> {
+                        if ("annual_stock_value_bonus".equals(field)) {
+                            return "\"ANNUAL STOCK VALUE/BONUS\""; // Special case
+                        } else {
+                            return "\"" + field.replace("_", " ").toUpperCase() + "\""; // General case
+                        }
+                    })
                     .collect(Collectors.joining(","));
 
-            List<Object[]> resultList = findByDynamicFields(columnName);
+            List<?> resultList = findByDynamicFields(columnName);
 
             List<Map<String, Object>> filteredData = new ArrayList<>();
 
-            for (Object[] row : resultList) {
-                Map<String, Object> rowMap = new HashMap<>();
-                for (int i = 0; i < row.length; i++) {
-                    rowMap.put(jsonProperty.get(i), row[i] != null ? row[i] : "");
+            if (resultList.get(0) instanceof Object[]) {
+                for (Object[] row : (List<Object[]>) resultList) {
+                    Map<String, Object> rowMap = new HashMap<>();
+                    for (int i = 0; i < row.length; i++) {
+                        rowMap.put(jsonProperty.get(i), row[i] != null ? row[i] : "");
+                    }
+                    filteredData.add(rowMap);
                 }
-                filteredData.add(rowMap);
+            } else {
+                for (Object row : resultList) {
+                    Map<String, Object> rowMap = new HashMap<>();
+                    rowMap.put(jsonProperty.get(0), row != null ? row : "");
+                    filteredData.add(rowMap);
+                }
             }
 
             List<JobDataDTO> dataDTOS = filteredData.stream()
@@ -145,10 +161,43 @@ public class JobDataServiceImpl implements JobDataService {
         }
     }
 
-    private List<Object[]> findByDynamicFields(String fields) {
+    private List<?> findByDynamicFields(String fields) {
         String sql = "SELECT " + fields + " FROM salary";
         Query query = entityManager.createNativeQuery(sql);
-        return query.getResultList();
+        List<?> resultList = query.getResultList();
+
+        if (resultList.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        resultList = resultList.stream().map(row -> {
+            if (row instanceof Object[]) {
+
+                Object[] rowArray = (Object[]) row;
+                for (int i = 0; i < rowArray.length; i++) {
+                    if (rowArray[i] instanceof Clob) {
+                        try {
+                            Clob clob = (Clob) rowArray[i];
+                            rowArray[i] = clob.getSubString(1, (int) clob.length());
+                        } catch (SQLException e) {
+                            throw new RuntimeException("Error converting CLOB to String", e);
+                        }
+                    }
+                }
+                return rowArray;
+            } else if (row instanceof Clob) {
+
+                Clob clob = (Clob) row;
+                try {
+                    return clob.getSubString(1, (int) clob.length());
+                } catch (SQLException e) {
+                    throw new RuntimeException("Error converting CLOB to String", e);
+                }
+            }
+            return row;
+        }).collect(Collectors.toList());
+
+        return  resultList;
     }
 
 }

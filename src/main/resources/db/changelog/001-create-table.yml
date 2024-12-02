@@ -63,7 +63,7 @@ databaseChangeLog:
                     nullable: true
               - column:
                   name: "Gender"
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: true
               - column:

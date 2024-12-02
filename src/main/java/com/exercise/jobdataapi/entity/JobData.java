@@ -49,7 +49,7 @@ public class JobData {
     @Column(name = "ANNUAL STOCK VALUE/BONUS", length = 255)
     private int annualStockValueBonus;
 
-    @Column(name = "GENDER")
+    @Column(name = "GENDER",length = 255)
     private String gender;
 
     @Column(name = "ADDITIONAL COMMENTS", columnDefinition = "TEXT")
