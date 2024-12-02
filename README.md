@@ -61,7 +61,7 @@ This ensures that only relevant records and fields are fetched dynamically based
 | Job Title | job_title |
 | Years at Employer | years_at_employer |
 | Years of Experience| years_of_experience |
-| Salary | salary |
+| Salary | salary (Filter by one or more fields salary[get], salary[lte]) |
 | Signing Bonus | signing_bonus |
 | Annual Bonus | annual_bonus |
 | Annual Stock Value/Bonus | annual_stock_value_bonus |
